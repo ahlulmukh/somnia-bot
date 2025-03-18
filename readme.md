@@ -6,6 +6,7 @@ for auto tx Tesnet
 
 - Multi Account
 - Support Proxy
+- Send Random Address
 - Claim Faucet
 - Swap Ping/Pong
 
