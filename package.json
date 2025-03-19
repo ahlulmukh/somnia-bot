@@ -1,6 +1,6 @@
 {
   "name": "somnia-bot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Auto Tx Somnia",
   "scripts": {
     "start": "node dist/index.js",
