@@ -141,13 +141,46 @@ export class somniaBot {
     }
   }
 
+  async mintPing() {
+    try {
+      const tx = await this.pingContract.mint(this.wallet.address, ethers.parseUnits("1000", 18));
+      await tx.wait();
+      logMessage(this.currentNum, this.total, `Minting PING successful`, "success");
+      logMessage(this.currentNum, this.total, `Transaction hash : ${tx.hash}`, "success");
+      logMessage(this.currentNum, this.total, `BlockHash URL : ${this.explorer}${tx.hash}`, "success");
+      console.log(chalk.white("-".repeat(85)));
+    } catch (error: any) {
+      logMessage(this.currentNum, this.total, `Minting PING failed: ${error.message}`, "error");
+    }
+  }
+
+  async mintPong() {
+    try {
+      const tx = await this.pongContract.mint(this.wallet.address, ethers.parseUnits("1000", 18));
+      await tx.wait();
+      logMessage(this.currentNum, this.total, `Minting PONG successful`, "success");
+      logMessage(this.currentNum, this.total, `Transaction hash : ${tx.hash}`, "success");
+      logMessage(this.currentNum, this.total, `BlockHash URL : ${this.explorer}${tx.hash}`, "success");
+      console.log(chalk.white("-".repeat(85)));
+    } catch (error: any) {
+      logMessage(this.currentNum, this.total, `Minting PONG failed: ${error.message}`, "error");
+    }
+  }
+
   async autoSwap() {
     const count = 3;
     for (let i = 0; i < count; i++) {
       const random = Math.random() < 0.5 ? 'PING->PONG' : 'PONG->PING';
       const amount = Math.floor(Math.random() * 100) + 1;
       const pingBalance = await this.pingContract.balanceOf(this.wallet.address);
+      if (BigInt(pingBalance) === BigInt(0)) {
+        await this.mintPing();
+      }
       const pongBalance = await this.pongContract.balanceOf(this.wallet.address);
+      if (BigInt(pongBalance) === BigInt(0)) {
+        await this.mintPong();
+      }
+
       logMessage(this.currentNum, this.total, `Balance Before Swap : `, "info");
       logMessage(this.currentNum, this.total, `PING Balance: ${ethers.formatUnits(pingBalance, 18)}`, "info");
       logMessage(this.currentNum, this.total, `PONG Balance: ${ethers.formatUnits(pongBalance, 18)}`, "info");
@@ -168,12 +201,12 @@ export class somniaBot {
 
         await swapTx.wait();
         logMessage(this.currentNum, this.total, `Swap ${random} successful`, "success");
-        logMessage(this.currentNum, this.total, `Amount: ${amount}`, "success");
-        logMessage(this.currentNum, this.total, `Transaction hash : ${swapTx.hash}`, "success");
-        logMessage(this.currentNum, this.total, `BlockHash URL : ${this.explorer}${swapTx.hash}`, "success");
+        logMessage(this.currentNum, this.total, `Amount: ${amount} `, "success");
+        logMessage(this.currentNum, this.total, `Transaction hash: ${swapTx.hash} `, "success");
+        logMessage(this.currentNum, this.total, `BlockHash URL: ${this.explorer}${swapTx.hash} `, "success");
         console.log(chalk.white("-".repeat(85)));
       } catch (error: any) {
-        logMessage(this.currentNum, this.total, `Auto swap failed: ${error.message}`, "error");
+        logMessage(this.currentNum, this.total, `Auto swap failed: ${error.message} `, "error");
       }
     }
   }
