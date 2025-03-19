@@ -8,6 +8,7 @@ for auto tx Tesnet
 - Support Proxy
 - Send Random Address
 - Claim Faucet
+- Mint Ping/Pong
 - Swap Ping/Pong
 
 ## Requirements
